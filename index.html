@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#1f6f5c">
+<title>大泉衛生 業務ツール</title>
+<style>
+  :root{
+    --ink:#1a1a1a; --sub:#5b6470; --line:#d9dee5; --line2:#eef1f5;
+    --bg:#f4f6f9; --card:#ffffff; --accent:#1f6f5c; --accent-d:#155445;
+    --chip:#eef4f2;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",system-ui,sans-serif;
+    font-size:14px; line-height:1.6; -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:960px; margin:0 auto; padding:18px 20px 60px}
+  @media (max-width:600px){ .wrap{padding:12px 12px 48px} }
+
+  header.app{
+    display:flex; align-items:center; gap:14px;
+    padding:16px 18px; background:var(--card); border:1px solid var(--line);
+    border-radius:12px; margin-bottom:18px;
+  }
+  header.app .logo{
+    width:46px; height:46px; border-radius:11px; background:var(--accent);
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:21px; flex:none; letter-spacing:.02em;
+  }
+  header.app h1{font-size:18px; margin:0; letter-spacing:.02em}
+  header.app .sub{font-size:12px; color:var(--sub); margin-top:3px}
+
+  h2.sec{
+    font-size:12px; font-weight:700; color:var(--accent-d);
+    margin:22px 0 10px; padding:4px 12px; background:var(--chip);
+    border-radius:999px; display:inline-block; letter-spacing:.04em;
+  }
+  h2.sec:first-of-type{margin-top:4px}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:10px}
+
+  a.tool{
+    display:flex; align-items:center; gap:13px; text-decoration:none; color:inherit;
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:15px 16px; min-height:76px; transition:.15s;
+  }
+  a.tool:hover{border-color:var(--accent); box-shadow:0 3px 12px rgba(31,111,92,.13); transform:translateY(-1px)}
+  a.tool:active{transform:translateY(0)}
+  a.tool .ico{
+    width:42px; height:42px; flex:none; border-radius:10px; background:var(--chip);
+    display:flex; align-items:center; justify-content:center; font-size:21px;
+  }
+  a.tool .body{flex:1; min-width:0}
+  a.tool .t{display:block; font-weight:700; font-size:14.5px; letter-spacing:.01em}
+  a.tool .d{display:block; font-size:12px; color:var(--sub); margin-top:3px}
+  a.tool .arw{flex:none; color:var(--accent); font-size:17px; font-weight:700}
+  a.tool .tag{
+    display:inline-block; font-size:10.5px; font-weight:700; padding:1px 7px;
+    border-radius:999px; background:var(--chip); color:var(--accent-d); margin-left:6px;
+    vertical-align:1px;
+  }
+
+  section.sub-group{margin-top:30px; padding-top:22px; border-top:1px dashed var(--line)}
+  section.sub-group h2.sec{background:#f0f0f2; color:#5b6470}
+  section.sub-group a.tool{background:#fbfbfc}
+  section.sub-group a.tool .ico{background:#f0f0f2}
+  section.sub-group a.tool:hover{border-color:#8a8f98; box-shadow:0 3px 12px rgba(0,0,0,.08)}
+  section.sub-group a.tool .arw{color:#5b6470}
+
+  .tip{
+    margin-top:26px; background:var(--card); border:1px solid var(--line);
+    border-radius:12px; padding:14px 16px; font-size:12.5px; color:var(--sub);
+  }
+  .tip b{color:var(--ink)}
+  .tip ul{margin:8px 0 0; padding-left:1.2em}
+  .tip li{margin:4px 0}
+  footer{margin-top:20px; text-align:center; font-size:11.5px; color:var(--sub)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="app">
+    <div class="logo">泉</div>
+    <div>
+      <h1>大泉衛生 業務ツール</h1>
+      <div class="sub">スマホ・PC どちらでも使えます／ログイン不要</div>
+    </div>
+  </header>
+
+  <h2 class="sec">報告する</h2>
+  <div class="grid">
+    <a class="tool" href="https://kimumino19970821-dot.github.io/daisen-report-tool/">
+      <span class="ico">📋</span>
+      <span class="body">
+        <span class="t">顧客状況報告書<span class="tag">営業→総務</span></span>
+        <span class="d">閉店・中止・管理会社変更・同業者への乗り換え・苦情・トラブル・返却の報告。大阪市の解約は契約解除登録申請書も一緒に出ます</span>
+      </span>
+      <span class="arw">›</span>
+    </a>
+
+    <a class="tool" href="https://script.google.com/macros/s/AKfycbwLpfqahKp6KwoPXpjDzQLU2kj4THerSDwjTgylpRf8Tes0qf4PhIyK5on0bo-H-yE/exec">
+      <span class="ico">🚚</span>
+      <span class="body">
+        <span class="t">臨時収集依頼 報告書<span class="tag">営業→総務</span></span>
+        <span class="d">臨時収集の日程・車両・搬入先・請求情報をまとめて総務へ報告</span>
+      </span>
+      <span class="arw">›</span>
+    </a>
+  </div>
+
+  <h2 class="sec">見積・契約</h2>
+  <div class="grid">
+    <a class="tool" href="https://kimumino19970821-dot.github.io/estimate/">
+      <span class="ico">🧮</span>
+      <span class="body">
+        <span class="t">見積書作成</span>
+        <span class="d">御見積書を作成して印刷・PDF保存</span>
+      </span>
+      <span class="arw">›</span>
+    </a>
+
+    <a class="tool" href="https://kimumino19970821-dot.github.io/oizumi-contract/">
+      <span class="ico">📄</span>
+      <span class="body">
+        <span class="t">契約書管理システム</span>
+        <span class="d">基本情報・現場情報・請求先・契約内容・支払方法・収集・ゴミの種類を登録</span>
+      </span>
+      <span class="arw">›</span>
+    </a>
+  </div>
+
+  <h2 class="sec">送る</h2>
+  <div class="grid">
+    <a class="tool" href="https://kimumino19970821-dot.github.io/daisen-fax-tool/">
+      <span class="ico">✉️</span>
+      <span class="body">
+        <span class="t">書類作成ツール</span>
+        <span class="d">送付状・FAX送信案内をA4で作成して印刷・PDF保存</span>
+      </span>
+      <span class="arw">›</span>
+    </a>
+  </div>
+
+  <section class="sub-group">
+    <h2 class="sec">関連（株式会社Golder・不動産）</h2>
+    <div class="grid">
+      <a class="tool" href="https://kimumino19970821-dot.github.io/golder-fax-tool/">
+        <span class="ico">🏠</span>
+        <span class="body">
+          <span class="t">Golder 書類作成ツール</span>
+          <span class="d">不動産用の送付状・FAX送信案内</span>
+        </span>
+        <span class="arw">›</span>
+      </a>
+    </div>
+  </section>
+
+  <div class="tip">
+    <b>💡 使い方のコツ</b>
+    <ul>
+      <li>スマホでこのページを開いて <b>「ホーム画面に追加」</b> しておくと、アイコンから一発で開けます</li>
+      <li>印刷するときは <b>用紙A4／「ヘッダーとフッター」のチェックを外す</b> ときれいに収まります</li>
+      <li>ログインは不要です。このページのURLを知っている人だけが使えます</li>
+    </ul>
+  </div>
+
+  <footer>大泉衛生株式会社 社内用</footer>
+</div>
+</body>
+</html>
