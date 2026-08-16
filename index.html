@@ -64,6 +64,38 @@
     vertical-align:1px;
   }
 
+  /* お客様に送るURLのカード（リンクではなくコピー用） */
+  .sendcard{
+    display:flex; align-items:flex-start; gap:13px;
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:15px 16px;
+  }
+  .sendcard .ico{
+    width:42px; height:42px; flex:none; border-radius:10px; background:var(--chip);
+    display:flex; align-items:center; justify-content:center; font-size:21px;
+  }
+  .sendcard .body{flex:1; min-width:0}
+  .sendcard .t{display:block; font-weight:700; font-size:14.5px}
+  .sendcard .d{display:block; font-size:12px; color:var(--sub); margin-top:3px}
+  .sendcard .url{
+    display:block; margin-top:8px; font-size:11.5px; color:var(--accent-d);
+    background:var(--chip); border:1px solid #cfe3dc; border-radius:7px;
+    padding:6px 9px; word-break:break-all; line-height:1.5;
+    font-family:ui-monospace,Menlo,Consolas,monospace;
+  }
+  .sendcard .acts{display:flex; flex-wrap:wrap; gap:7px; margin-top:9px}
+  .sendcard button,.sendcard a.open{
+    font:inherit; font-size:12.5px; font-weight:700; cursor:pointer; text-decoration:none;
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:8px; padding:8px 14px;
+  }
+  .sendcard button.main{background:var(--accent); border-color:var(--accent); color:#fff}
+  .sendcard button:hover{filter:brightness(.97)}
+  .sendcard button.done{background:#155445; border-color:#155445; color:#fff}
+  @media (max-width:600px){
+    .sendcard .acts button,.sendcard .acts a.open{flex:1 1 auto; text-align:center}
+  }
+
   .tip{
     margin-top:26px; background:var(--card); border:1px solid var(--line);
     border-radius:12px; padding:14px 16px; font-size:12.5px; color:var(--sub);
@@ -84,6 +116,22 @@
       <div class="sub">スマホ・PC どちらでも使えます／ログイン不要</div>
     </div>
   </header>
+
+  <h2 class="sec">お客様に送る</h2>
+  <div class="sendcard">
+    <span class="ico">🔗</span>
+    <span class="body">
+      <span class="t">契約お客様情報フォーム</span>
+      <span class="d">新規契約のとき、会社情報・現場情報・ご担当者をお客様に入力していただくフォームです。
+        このURLをメールやLINEで送ってください。押印・郵送は不要です。</span>
+      <span class="url" id="formUrl">https://osaka-daisen.github.io/daisen-keiyaku-form/</span>
+      <span class="acts">
+        <button type="button" class="main" data-copy="url">URLをコピー</button>
+        <button type="button" data-copy="msg">案内文ごとコピー</button>
+        <a class="open" href="https://osaka-daisen.github.io/daisen-keiyaku-form/" target="_blank" rel="noopener">開いて確認</a>
+      </span>
+    </span>
+  </div>
 
   <h2 class="sec">報告する</h2>
   <div class="grid">
@@ -135,6 +183,15 @@
       <span class="arw">›</span>
     </a>
 
+    <a class="tool" href="https://osaka-daisen.github.io/daisen-keiyaku-form/sakusei/">
+      <span class="ico">📑</span>
+      <span class="body">
+        <span class="t">契約書作成 依頼書メーカー<span class="tag">社内用</span></span>
+        <span class="d">お客様がフォームに入力した内容に大泉衛生記入欄を足して、委託先2社ぶんの書類をPDFで作成</span>
+      </span>
+      <span class="arw">›</span>
+    </a>
+
     <a class="tool" href="https://osaka-daisen.github.io/daisen-sanpai-request/">
       <span class="ico">♻️</span>
       <span class="body">
@@ -180,5 +237,66 @@
 
   <footer>大泉衛生株式会社 社内用</footer>
 </div>
+
+<script>
+/* お客様に送るURL・案内文をワンタップでコピーする */
+const FORM_URL = 'https://osaka-daisen.github.io/daisen-keiyaku-form/';
+const FORM_MSG =
+`お世話になっております。大泉衛生の〇〇です。
+
+産業廃棄物の処理委託契約にあたり、契約書作成に必要な情報を
+下記のフォームよりご入力いただけますでしょうか。
+
+▼ ご入力フォーム
+${FORM_URL}
+
+入力は5分ほどで、押印・郵送は不要です。
+ご送信いただきましたら弊社にて契約書を作成し、
+ご記入のメールアドレス宛にお手続きのご案内をお送りいたします。
+
+ご不明な点がございましたらお気軽にご連絡ください。`;
+
+async function copyText(text){
+  try{
+    await navigator.clipboard.writeText(text);
+    return true;
+  }catch(e){
+    // clipboard が使えない環境（古いブラウザ等）の逃げ道
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try{ ok = document.execCommand('copy'); }catch(e2){}
+    document.body.removeChild(ta);
+    return ok;
+  }
+}
+
+document.querySelectorAll('.sendcard button[data-copy]').forEach(btn => {
+  const label = btn.textContent;
+  btn.addEventListener('click', async () => {
+    const ok = await copyText(btn.dataset.copy === 'msg' ? FORM_MSG : FORM_URL);
+    btn.textContent = ok ? 'コピーしました ✓' : 'コピーできません。下のURLを長押しで選んでください';
+    btn.classList.toggle('done', ok);
+    if(!ok){
+      // 自動コピーが使えない環境では、URLを選択状態にして手でコピーできるようにする
+      const el = document.getElementById('formUrl');
+      const r = document.createRange();
+      r.selectNodeContents(el);
+      const s = window.getSelection();
+      s.removeAllRanges();
+      s.addRange(r);
+      el.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+    setTimeout(() => {
+      btn.textContent = label;
+      btn.classList.remove('done');
+    }, 1800);
+  });
+});
+</script>
 </body>
 </html>
