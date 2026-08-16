@@ -118,13 +118,29 @@
   </header>
 
   <h2 class="sec">お客様に送る</h2>
-  <div class="sendcard">
+
+  <div class="sendcard" data-form="ippan">
+    <span class="ico">🗑️</span>
+    <span class="body">
+      <span class="t">定期回収 お申込みフォーム<span class="tag">一般廃棄物</span></span>
+      <span class="d">事業系ごみの定期回収を新規契約するとき。ごみの種類・量・希望の回数や曜日、
+        定休日などをお客様に入力していただきます。</span>
+      <span class="url">https://osaka-daisen.github.io/daisen-ippan-form/</span>
+      <span class="acts">
+        <button type="button" class="main" data-copy="url">URLをコピー</button>
+        <button type="button" data-copy="msg">案内文ごとコピー</button>
+        <a class="open" href="https://osaka-daisen.github.io/daisen-ippan-form/" target="_blank" rel="noopener">開いて確認</a>
+      </span>
+    </span>
+  </div>
+
+  <div class="sendcard" data-form="sanpai" style="margin-top:10px">
     <span class="ico">🔗</span>
     <span class="body">
-      <span class="t">契約お客様情報フォーム</span>
-      <span class="d">新規契約のとき、会社情報・現場情報・ご担当者をお客様に入力していただくフォームです。
-        このURLをメールやLINEで送ってください。押印・郵送は不要です。</span>
-      <span class="url" id="formUrl">https://osaka-daisen.github.io/daisen-keiyaku-form/</span>
+      <span class="t">契約お客様情報フォーム<span class="tag">産業廃棄物</span></span>
+      <span class="d">産廃の処理委託契約のとき、会社情報・現場情報・ご担当者をお客様に入力していただくフォームです。
+        押印・郵送は不要です。</span>
+      <span class="url">https://osaka-daisen.github.io/daisen-keiyaku-form/</span>
       <span class="acts">
         <button type="button" class="main" data-copy="url">URLをコピー</button>
         <button type="button" data-copy="msg">案内文ごとコピー</button>
@@ -183,10 +199,19 @@
       <span class="arw">›</span>
     </a>
 
+    <a class="tool" href="https://osaka-daisen.github.io/daisen-ippan-form/sakusei/">
+      <span class="ico">📗</span>
+      <span class="body">
+        <span class="t">一般廃棄物 契約書類メーカー<span class="tag">社内用</span></span>
+        <span class="d">定期回収のお申込み内容に契約額・〆日・車番などを足して、契約書管理システムの登録シートをPDFで作成</span>
+      </span>
+      <span class="arw">›</span>
+    </a>
+
     <a class="tool" href="https://osaka-daisen.github.io/daisen-keiyaku-form/sakusei/">
       <span class="ico">📑</span>
       <span class="body">
-        <span class="t">契約書作成 依頼書メーカー<span class="tag">社内用</span></span>
+        <span class="t">産廃 契約書作成 依頼書メーカー<span class="tag">社内用</span></span>
         <span class="d">お客様がフォームに入力した内容に大泉衛生記入欄を足して、委託先2社ぶんの書類をPDFで作成</span>
       </span>
       <span class="arw">›</span>
@@ -240,21 +265,39 @@
 
 <script>
 /* お客様に送るURL・案内文をワンタップでコピーする */
-const FORM_URL = 'https://osaka-daisen.github.io/daisen-keiyaku-form/';
-const FORM_MSG =
-`お世話になっております。大泉衛生の〇〇です。
+const FORMS = {
+  ippan: {
+    url: 'https://osaka-daisen.github.io/daisen-ippan-form/',
+    msg: `お世話になっております。大泉衛生の〇〇です。
+
+事業系ごみの定期回収につきまして、お見積りとご契約に必要な情報を
+下記のフォームよりご入力いただけますでしょうか。
+
+▼ お申込みフォーム
+https://osaka-daisen.github.io/daisen-ippan-form/
+
+入力は5分ほどです。いただいた内容をもとに、
+回収の曜日・回数とお見積りをご提案いたします。
+
+ご不明な点がございましたらお気軽にご連絡ください。`
+  },
+  sanpai: {
+    url: 'https://osaka-daisen.github.io/daisen-keiyaku-form/',
+    msg: `お世話になっております。大泉衛生の〇〇です。
 
 産業廃棄物の処理委託契約にあたり、契約書作成に必要な情報を
 下記のフォームよりご入力いただけますでしょうか。
 
 ▼ ご入力フォーム
-${FORM_URL}
+https://osaka-daisen.github.io/daisen-keiyaku-form/
 
 入力は5分ほどで、押印・郵送は不要です。
 ご送信いただきましたら弊社にて契約書を作成し、
 ご記入のメールアドレス宛にお手続きのご案内をお送りいたします。
 
-ご不明な点がございましたらお気軽にご連絡ください。`;
+ご不明な点がございましたらお気軽にご連絡ください。`
+  }
+};
 
 async function copyText(text){
   try{
@@ -277,13 +320,15 @@ async function copyText(text){
 
 document.querySelectorAll('.sendcard button[data-copy]').forEach(btn => {
   const label = btn.textContent;
+  const card  = btn.closest('.sendcard');
+  const form  = FORMS[card.dataset.form];
   btn.addEventListener('click', async () => {
-    const ok = await copyText(btn.dataset.copy === 'msg' ? FORM_MSG : FORM_URL);
+    const ok = await copyText(btn.dataset.copy === 'msg' ? form.msg : form.url);
     btn.textContent = ok ? 'コピーしました ✓' : 'コピーできません。下のURLを長押しで選んでください';
     btn.classList.toggle('done', ok);
     if(!ok){
       // 自動コピーが使えない環境では、URLを選択状態にして手でコピーできるようにする
-      const el = document.getElementById('formUrl');
+      const el = card.querySelector('.url');
       const r = document.createRange();
       r.selectNodeContents(el);
       const s = window.getSelection();
