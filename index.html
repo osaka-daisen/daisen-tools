@@ -83,6 +83,13 @@
     padding:6px 9px; word-break:break-all; line-height:1.5;
     font-family:ui-monospace,Menlo,Consolas,monospace;
   }
+  .sendcard .pick{display:flex; align-items:center; gap:8px; margin-top:9px; flex-wrap:wrap}
+  .sendcard .pick .lb{font-size:12px; font-weight:700; color:var(--sub)}
+  .sendcard .pick select{
+    font:inherit; font-size:12.5px; font-weight:700; color:var(--ink);
+    border:1px solid var(--line); background:#fff; border-radius:8px; padding:7px 10px;
+    flex:1 1 200px; min-width:0;
+  }
   .sendcard .acts{display:flex; flex-wrap:wrap; gap:7px; margin-top:9px}
   .sendcard button,.sendcard a.open{
     font:inherit; font-size:12.5px; font-weight:700; cursor:pointer; text-decoration:none;
@@ -122,14 +129,22 @@
   <div class="sendcard" data-form="ippan">
     <span class="ico">🗑️</span>
     <span class="body">
-      <span class="t">ご契約手続きフォーム<span class="tag">一般廃棄物</span></span>
+      <span class="t">ご契約手続きフォーム<span class="tag">定期回収</span></span>
       <span class="d">お見積りにご承諾いただいた後、契約書の作成に必要な情報をお客様に
         入力していただきます。回収内容・料金は打ち合わせ済みの前提です。</span>
-      <span class="url">https://osaka-daisen.github.io/daisen-ippan-form/</span>
+      <span class="pick">
+        <span class="lb">回収するごみ</span>
+        <select id="ippanKind">
+          <option value="ippan">一般廃棄物のみ</option>
+          <option value="sanpai">産業廃棄物のみ</option>
+          <option value="both">一般廃棄物＋産業廃棄物（民泊など）</option>
+        </select>
+      </span>
+      <span class="url">https://osaka-daisen.github.io/daisen-ippan-form/?kind=ippan</span>
       <span class="acts">
         <button type="button" class="main" data-copy="url">URLをコピー</button>
         <button type="button" data-copy="msg">案内文ごとコピー</button>
-        <a class="open" href="https://osaka-daisen.github.io/daisen-ippan-form/" target="_blank" rel="noopener">開いて確認</a>
+        <a class="open" href="https://osaka-daisen.github.io/daisen-ippan-form/?kind=ippan" target="_blank" rel="noopener">開いて確認</a>
       </span>
     </span>
   </div>
@@ -265,21 +280,26 @@
 
 <script>
 /* お客様に送るURL・案内文をワンタップでコピーする */
+/* 定期回収フォームの「回収するごみの種類」は、お客様ではなく大泉衛生が決める。
+   選んだ内容が ?kind= に入り、そのまま台帳と通知メールの件名に反映される */
+const IPPAN_BASE = 'https://osaka-daisen.github.io/daisen-ippan-form/';
+const ippanUrl = () => IPPAN_BASE + '?kind=' + (document.getElementById('ippanKind').value || 'ippan');
+
 const FORMS = {
   ippan: {
-    url: 'https://osaka-daisen.github.io/daisen-ippan-form/',
-    msg: `お世話になっております。大泉衛生の〇〇です。
+    get url(){ return ippanUrl(); },
+    get msg(){ return `お世話になっております。大泉衛生の〇〇です。
 
 先日はお見積りにご承諾いただき、誠にありがとうございます。
 契約書の作成に必要な情報を、下記のフォームよりご入力いただけますでしょうか。
 
 ▼ ご契約手続きフォーム
-https://osaka-daisen.github.io/daisen-ippan-form/
+${ippanUrl()}
 
 入力は5分ほどです。ご送信いただきましたら弊社にて契約書を作成し、
-ご記入のメールアドレス宛にお手続きのご案内をお送りいたします。
+準備ができましたらあらためてご連絡いたします。
 
-ご不明な点がございましたらお気軽にご連絡ください。`
+ご不明な点がございましたらお気軽にご連絡ください。`; }
   },
   sanpai: {
     url: 'https://osaka-daisen.github.io/daisen-keiyaku-form/',
@@ -293,11 +313,21 @@ https://osaka-daisen.github.io/daisen-keiyaku-form/
 
 入力は5分ほどで、押印・郵送は不要です。
 ご送信いただきましたら弊社にて契約書を作成し、
-ご記入のメールアドレス宛にお手続きのご案内をお送りいたします。
+準備ができましたらあらためてご連絡いたします。
 
 ご不明な点がございましたらお気軽にご連絡ください。`
   }
 };
+
+/* 種類を変えたら、表示されているURLと「開いて確認」も追随させる */
+(function(){
+  const sel  = document.getElementById('ippanKind');
+  const card = document.querySelector('.sendcard[data-form="ippan"]');
+  sel.addEventListener('change', function(){
+    card.querySelector('.url').textContent = ippanUrl();
+    card.querySelector('a.open').href      = ippanUrl();
+  });
+})();
 
 async function copyText(text){
   try{
