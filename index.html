@@ -110,6 +110,15 @@
   }
   @media (prefers-color-scheme: dark){ .tag{color:var(--teal)} }
 
+  .senderbar{display:flex; align-items:center; gap:11px; flex-wrap:wrap;
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:12px 15px; margin-bottom:11px; box-shadow:var(--shadow)}
+  .senderbar .lbl{font-family:"Zen Kaku Gothic New",sans-serif; font-size:12.5px; font-weight:700; color:var(--ink-2)}
+  .senderbar select{font:inherit; font-size:14px; font-weight:700; color:var(--ink); background:var(--card);
+    border:1px solid var(--line-2); border-radius:9px; padding:8px 12px; min-width:150px}
+  .senderbar select:focus{outline:2px solid var(--teal); outline-offset:1px}
+  .senderbar .note{font-size:11.5px; color:var(--ink-3)}
+
   /* ===== お客様に送るカード ===== */
   .sendcard{
     display:flex; align-items:flex-start; gap:14px;
@@ -194,6 +203,16 @@
 
   <div class="block" data-block>
     <h2 class="sec">お客様に送る</h2>
+
+    <div class="senderbar" data-item>
+      <span class="lbl">案内文の差出人</span>
+      <select id="senderName">
+        <option value="">（選んでください）</option>
+        <option>木村</option><option>原田</option><option>藤川</option>
+        <option>森田</option><option>中村</option>
+      </select>
+      <span class="note">一度選ぶと、この端末が覚えます</span>
+    </div>
 
     <div class="sendcard" data-form="ippan" data-item>
       <span class="ico">🗑️</span>
@@ -394,13 +413,22 @@
 /* お客様に送るURL・案内文をワンタップでコピーする */
 /* 定期回収フォームの「回収するごみの種類」は、お客様ではなく大泉衛生が決める。
    選んだ内容が ?kind= に入り、そのまま台帳と通知メールの件名に反映される */
+const SENDER_KEY = 'daisen-sender-name';
+const senderEl = document.getElementById('senderName');
+try { senderEl.value = localStorage.getItem(SENDER_KEY) || ''; } catch(e) {}
+senderEl.addEventListener('change', () => {
+  try { localStorage.setItem(SENDER_KEY, senderEl.value); } catch(e) {}
+});
+/* 未選択のときは〇〇のままにして、あとで手で直せるようにする */
+const sender = () => senderEl.value || '〇〇';
+
 const IPPAN_BASE = 'https://osaka-daisen.github.io/daisen-ippan-form/';
 const ippanUrl = () => IPPAN_BASE + '?kind=' + (document.getElementById('ippanKind').value || 'ippan');
 
 const FORMS = {
   ippan: {
     get url(){ return ippanUrl(); },
-    get msg(){ return `お世話になっております。大泉衛生の〇〇です。
+    get msg(){ return `お世話になっております。大泉衛生の${sender()}です。
 
 先日はお見積りにご承諾いただき、誠にありがとうございます。
 契約書の作成に必要な情報を、下記のフォームよりご入力いただけますでしょうか。
@@ -415,7 +443,7 @@ ${ippanUrl()}
   },
   sanpai: {
     url: 'https://osaka-daisen.github.io/daisen-keiyaku-form/',
-    msg: `お世話になっております。大泉衛生の〇〇です。
+    get msg(){ return `お世話になっております。大泉衛生の${sender()}です。
 
 産業廃棄物の処理委託契約にあたり、契約書作成に必要な情報を
 下記のフォームよりご入力いただけますでしょうか。
@@ -427,7 +455,7 @@ https://osaka-daisen.github.io/daisen-keiyaku-form/
 ご送信いただきましたら弊社にて契約書を作成し、
 準備ができましたらあらためてご連絡いたします。
 
-ご不明な点がございましたらお気軽にご連絡ください。`
+ご不明な点がございましたらお気軽にご連絡ください。`; }
   }
 };
 
